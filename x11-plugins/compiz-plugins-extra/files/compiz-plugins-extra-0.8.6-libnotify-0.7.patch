@@ -1,0 +1,12 @@
+diff -Naur compiz-plugins-extra-0.8.6.orig/src/notification/notification.c compiz-plugins-extra-0.8.6/src/notification/notification.c
+--- compiz-plugins-extra-0.8.6.orig/src/notification/notification.c	2010-03-29 17:09:18.000000000 +0300
++++ compiz-plugins-extra-0.8.6/src/notification/notification.c	2011-05-01 11:55:44.000000000 +0300
+@@ -103,7 +103,7 @@
+ 
+     n = notify_notification_new (logLevel,
+                                  message,
+-                                 iconUri, NULL);
++                                 iconUri);
+ 
+     notify_notification_set_timeout (n, nd->timeout);
+ 

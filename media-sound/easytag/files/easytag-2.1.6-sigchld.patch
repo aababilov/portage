@@ -1,0 +1,42 @@
+--- easytag-2.1.6/src/easytag.c.orig	2009-07-11 14:59:57.000000000 +0300
++++ easytag-2.1.6/src/easytag.c		2009-07-11 15:44:13.000000000 +0300
+@@ -58,6 +58,8 @@
+ 
+ #ifdef WIN32
+ #   include "win32/win32dep.h"
++#else
++#   include <sys/wait.h>
+ #endif
+ 
+ #include "../pixmaps/EasyTAG_icon.xpm"
+@@ -139,7 +141,21 @@
+ void Quit_Recursion_Function_Button_Pressed (void);
+ void Quit_Recursion_Window_Key_Press (GtkWidget *window, GdkEvent *event);
+ 
++#ifndef WIN32
++static void sigchld_handler(int signum)
++{
++	wait(NULL);
++}
+ 
++static void setup_sigchld()
++{
++	struct sigaction sa = {0};
++	sa.sa_handler = sigchld_handler;
++	sigemptyset(&sa.sa_mask);
++	sa.sa_flags = SA_RESTART; 
++	sigaction(SIGCHLD, &sa, NULL);
++}
++#endif
+ 
+ /********
+  * Main *
+@@ -169,7 +185,7 @@
+     signal(SIGFPE,Handle_Crash);
+     signal(SIGSEGV,Handle_Crash);
+     // Must handle this signal to avoid zombie of applications executed (ex: xmms)
+-    signal(SIGCHLD,SIG_IGN); // Fix me! : can't run nautilus 1.0.6 with "Browse Directory With"
++    setup_sigchld();
+ #endif
+ 
+ #ifdef ENABLE_NLS

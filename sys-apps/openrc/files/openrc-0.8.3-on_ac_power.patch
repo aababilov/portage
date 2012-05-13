@@ -1,0 +1,22 @@
+diff -Naur openrc-0.8.2.orig/scripts/on_ac_power openrc-0.8.2/scripts/on_ac_power
+--- openrc-0.8.2.orig/scripts/on_ac_power       2011-04-16 03:48:30.000000000 +0300
++++ openrc-0.8.2/scripts/on_ac_power    2011-04-30 15:50:34.000000000 +0300
+@@ -3,14 +3,14 @@
+ # Copyright (c) 2007-2009 Roy Marples <roy@marples.name>
+ 
+ # Exit 0 if on AC power, 1 if not and 255 if we don't know how to work it out
+-if [ -f /proc/acpi/ac_adapter/AC*/state ]; then
+-	cat /proc/acpi/ac_adapter/AC*/state | while read line; do
++if [ -f /proc/acpi/ac_adapter/*/state ]; then
++	cat /proc/acpi/ac_adapter/*/state | while read line; do
+ 		case "$line" in
+ 		"state:"*"off-line") exit 128;;
+ 		esac
+ 	done
+-elif [ -f /sys/class/power_supply/AC*/online ]; then
+-	cat /sys/class/power_supply/AC*/online | while read line; do
++elif [ -f /sys/class/power_supply/*/online ]; then
++	cat /sys/class/power_supply/*/online | while read line; do
+ 		[ "${line}" = 0 ] && exit 128
+ 	done
+ elif [ -f /proc/pmu/info ]; then

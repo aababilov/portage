@@ -1,0 +1,84 @@
+diff -Naur stardict-3.0.1.orig/po/ru.po stardict-3.0.1/po/ru.po
+--- stardict-3.0.1.orig/po/ru.po	2007-11-05 07:52:26.000000000 +0200
++++ stardict-3.0.1/po/ru.po	2011-05-17 18:56:57.000000000 +0300
+@@ -2299,6 +2299,38 @@
+ msgid "XDXF data parsing plug-in loaded.\n"
+ msgstr ""
+ 
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:98
++msgid "Language: "
++msgstr "Язык: "
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:99
++msgid "Explicit forms"
++msgstr "Явные формы"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:120
++msgid "Implicit forms"
++msgstr "Неявные формы"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:166
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:185
++msgid "WordForm"
++msgstr ""
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:166
++#, fuzzy
++msgid "Worm Form virtual dictionary."
++msgstr ""
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:167
++#, fuzzy
++msgid "Show the word forms."
++msgstr "Показывать формы слов"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:186
++#, c-format
++msgid "WordForm plug-in loaded.\n"
++msgstr ""
++
+ #, fuzzy
+ #~ msgid "Found no words matching this regular expressions!"
+ #~ msgstr "Не найдено слов совпадающих с шаблоном!"
+diff -Naur stardict-3.0.1.orig/po/uk.po stardict-3.0.1/po/uk.po
+--- stardict-3.0.1.orig/po/uk.po	2007-11-05 07:52:52.000000000 +0200
++++ stardict-3.0.1/po/uk.po	2011-05-17 18:57:03.000000000 +0300
+@@ -2370,6 +2370,38 @@
+ msgid "XDXF data parsing plug-in loaded.\n"
+ msgstr ""
+ 
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:98
++msgid "Language: "
++msgstr "Мова: "
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:99
++msgid "Explicit forms"
++msgstr "Явні форми"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:120
++msgid "Implicit forms"
++msgstr "Неявні форми"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:166
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:185
++msgid "WordForm"
++msgstr ""
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:166
++#, fuzzy
++msgid "Worm Form virtual dictionary."
++msgstr ""
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:167
++#, fuzzy
++msgid "Show the word forms."
++msgstr "Показувати форми слів"
++
++#: ../stardict-plugins/stardict-wordform-plugin/stardict_wordform.cpp:186
++#, c-format
++msgid "WordForm plug-in loaded.\n"
++msgstr ""
++
+ #, fuzzy
+ #~ msgid "Found no words matching this regular expressions!"
+ #~ msgstr "Не знайдено слів, які б відповідали шаблону!"

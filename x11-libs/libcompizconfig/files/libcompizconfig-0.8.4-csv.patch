@@ -1,0 +1,216 @@
+diff -Naur libcompizconfig-0.8.4.orig/src/ini.c libcompizconfig-0.8.4/src/ini.c
+--- libcompizconfig-0.8.4.orig/src/ini.c	2009-10-14 03:36:04.000000000 +0300
++++ libcompizconfig-0.8.4/src/ini.c	2011-03-06 17:27:52.000000000 +0200
+@@ -302,6 +302,41 @@
+     return TRUE;
+ }
+ 
++static char *
++strsepesc(char **stringp,
++	  const char *delim,
++	  char esc)
++{
++    char *p, *token;
++    
++    if (*stringp == NULL)
++	return NULL;
++    token = *stringp;
++    if (strchr(delim, esc) != NULL)
++    {
++	*stringp = NULL;
++	return token;
++    }
++    p = token;
++    while (**stringp != '\0' && strchr(delim, **stringp) == NULL) 
++    {		
++	if (**stringp == esc)
++	{
++	    ++*stringp;
++	    if (**stringp == '\0')
++		break;
++	}
++        *p++ = **stringp;			
++	++(*stringp);
++    }	
++    if (**stringp == '\0')
++	*stringp = NULL;
++    else
++	++(*stringp);
++    *p = '\0';
++    return token;
++}
++
+ Bool
+ ccsIniGetList (IniDictionary       *dictionary,
+    	       const char          *section,
+@@ -312,7 +347,7 @@
+     CCSSettingValueList list = NULL;
+     char                *valueString, *valueStart, *valString;
+     char                *token;
+-    int                 nItems = 1, i = 0, len;
++    int                 nItems = 0, i = 0, len;
+ 
+     valString = getIniString (dictionary, section, entry);
+     if (!valString)
+@@ -333,14 +368,18 @@
+     if (valueString[len - 1] == ';')
+ 	valueString[len - 1] = 0;
+ 
+-    token = strchr (valueString, ';');
++    token = strsepesc (&valueString, ";", '\\');
+     while (token)
+     {
+-	token = strchr (token + 1, ';');
++	token = strsepesc (&valueString, ";", '\\');
+ 	nItems++;
+     }
+ 
+-    token = strsep (&valueString, ";");
++    valueString = valueStart;
++    strcpy(valueString, valString);
++    if (valueString[len - 1] == ';')
++        valueString[len - 1] = 0;
++    token = strsepesc (&valueString, ";", '\\');
+     switch (parent->info.forList.listType)
+     {
+     case TypeString:
+@@ -353,7 +392,7 @@
+ 	    while (token)
+ 	    {
+ 		array[i++] = strdup (token);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 
+ 	    list = ccsGetValueListFromStringArray (array, nItems, parent);
+@@ -375,7 +414,7 @@
+ 	    {
+ 		memset (&array[i], 0, sizeof (CCSSettingColorValue));
+ 		ccsStringToColor (token, &array[i]);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 		i++;
+ 	    }
+ 
+@@ -396,7 +435,7 @@
+ 			  token[0] == '1' ||
+ 			  token[0] == 't' || token[0] == 'T');
+ 		array[i++] = isTrue;
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 
+ 	    list = ccsGetValueListFromBoolArray (array, nItems, parent);
+@@ -412,7 +451,7 @@
+ 	    while (token)
+ 	    {
+ 		array[i++] = strtoul (token, NULL, 10);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 
+ 	    list = ccsGetValueListFromIntArray (array, nItems, parent);
+@@ -428,7 +467,7 @@
+ 	    while (token)
+ 	    {
+ 		array[i++] = strtod (token, NULL);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 
+ 	    list = ccsGetValueListFromFloatArray (array, nItems, parent);
+@@ -449,7 +488,7 @@
+ 		    list = ccsSettingValueListAppend (list, val);
+ 		else
+ 		    free (val);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 	}
+ 	break;
+@@ -467,7 +506,7 @@
+ 		    list = ccsSettingValueListAppend (list, val);
+ 		else
+ 		    free (val);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 	}
+ 	break;
+@@ -483,7 +522,7 @@
+ 		    break;
+ 		val->value.asEdge = ccsStringToEdges (token);
+ 		list = ccsSettingValueListAppend (list, val);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 	}
+ 	break;
+@@ -505,7 +544,7 @@
+ 		
+ 		val->value.asBell = isTrue;
+ 		list = ccsSettingValueListAppend (list, val);
+-		token = strsep (&valueString, ";");
++		token = strsepesc (&valueString, ";", '\\');
+ 	    }
+ 	}
+ 	break;
+@@ -650,9 +689,9 @@
+ 	       CCSSettingValueList value,
+ 	       CCSSettingType      listType)
+ {
+-    char         *stringBuffer, *valueString;
++    char         *stringBuffer, *valueString, *valueChar;
+     char         valueBuffer[100];
+-    unsigned int bufferSize = 1024, fill;
++    unsigned int bufferSize = 1024, fill = 0, valueSize, neededSize;
+ 
+     stringBuffer = calloc (1, bufferSize);
+     if (!stringBuffer)
+@@ -707,24 +746,35 @@
+ 	if (!valueString)
+ 	    return;
+ 
+-	fill = strlen (stringBuffer);
++	valueSize = 0;
++	for (valueChar = valueString; *valueChar; ++valueChar)
++	{
++	    if (*valueChar == ';' || *valueChar == '\\')
++	        ++valueSize;
++	    ++valueSize;
++	}
++	
+ 	/* the + 1 is the semicolon we're going to add */
+-	if ((fill + strlen (valueString) + 1) >= bufferSize)
++	neededSize = fill + valueSize + 1; 
++	if (neededSize >= bufferSize) 
+ 	{
+-	    /* buffer is too small, make it larger */
+-	    bufferSize *= 2;
++	    do
++		bufferSize *= 2;
++	    while (neededSize >= bufferSize);
++	
+ 	    stringBuffer = realloc (stringBuffer, bufferSize);
+ 	    if (!stringBuffer)
+ 		return;
+-
+-	    /* properly NULL terminate it */
+-	    stringBuffer[fill] = 0;
+ 	}
+ 
+-	/* we made sure that the buffer is large enough before, so
+-	   there is no need for strncat */
+-	strcat (stringBuffer, valueString);
+-	strcat (stringBuffer, ";");
++	for (valueChar = valueString; *valueChar; ++valueChar)
++	{
++	    if (*valueChar == ';' || *valueChar == '\\')
++		stringBuffer[fill++] = '\\';
++            stringBuffer[fill++] = *valueChar;
++	}
++	stringBuffer[fill++] = ';';
++	stringBuffer[fill + 1] = '\0';
+ 
+ 	if (listType == TypeColor  || listType == TypeKey ||
+ 	    listType == TypeButton || listType == TypeEdge)

@@ -1,0 +1,89 @@
+diff -Naur compiz-plugins-extra-0.8.6.orig/metadata/wallpaper.xml.in compiz-plugins-extra-0.8.6/metadata/wallpaper.xml.in
+--- compiz-plugins-extra-0.8.6.orig/metadata/wallpaper.xml.in	2010-03-29 17:09:17.000000000 +0300
++++ compiz-plugins-extra-0.8.6/metadata/wallpaper.xml.in	2011-02-27 13:22:15.000000000 +0200
+@@ -24,7 +24,7 @@
+ 					<_long>Image position.</_long>
+ 					<type>int</type>
+ 					<min>0</min>
+-					<max>4</max>
++					<max>6</max>
+ 					<desc>
+ 						<value>0</value>
+ 						<_name>Scale and Crop</_name>
+@@ -45,6 +45,14 @@
+ 						<value>4</value>
+ 						<_name>Center Tiled</_name>
+ 					</desc>
++					<desc>
++						<value>5</value>
++						<_name>Scale and Crop Bottom</_name>
++					</desc>
++					<desc>
++						<value>6</value>
++						<_name>Scaled Proportionally</_name>
++					</desc>
+ 				</option>
+ 				<option name="bg_fill_type" type="list">
+ 					<_short>Fill type</_short>
+diff -Naur compiz-plugins-extra-0.8.6.orig/po/ru.po compiz-plugins-extra-0.8.6/po/ru.po
+--- compiz-plugins-extra-0.8.6.orig/po/ru.po	2010-03-29 17:09:18.000000000 +0300
++++ compiz-plugins-extra-0.8.6/po/ru.po	2011-02-27 12:43:19.000000000 +0200
+@@ -5949,6 +5949,12 @@
+ msgid "Scaled"
+ msgstr "Растянуть"
+ 
++msgid "Scaled Proportionally"
++msgstr "Растянуть, сохраняя пропорции"
++
++msgid "Scale and Crop Bottom"
++msgstr "Масштабировать, срезав снизу"
++
+ msgid "Second gradient color."
+ msgstr "Второй цвет градиента"
+ 
+diff -Naur compiz-plugins-extra-0.8.6.orig/src/wallpaper/wallpaper.c compiz-plugins-extra-0.8.6/src/wallpaper/wallpaper.c
+--- compiz-plugins-extra-0.8.6.orig/src/wallpaper/wallpaper.c	2010-03-29 17:09:18.000000000 +0300
++++ compiz-plugins-extra-0.8.6/src/wallpaper/wallpaper.c	2011-02-27 13:18:06.000000000 +0200
+@@ -710,7 +710,42 @@
+ 		x = (s->width - ((int)back->width * s1)) / 2.0;
+ 		tmpMatrix.x0 -= x * tmpMatrix.xx;
+ 		y = (s->height - ((int)back->height * s1)) / 2.0;
++		tmpMatrix.y0 -= y * tmpMatrix.yy;		
++	    }
++	    else if (back->imagePos == BgImagePosScaleAndCropBottom)
++	    {
++		s1 = (float) s->width / back->width;
++		s2 = (float) s->height / back->height;
++		
++		s1 = MAX (s1, s2);
++
++		tmpMatrix.xx /= s1;
++		tmpMatrix.yy /= s1;
++		
++		x = (s->width - ((int)back->width * s1)) / 2.0;
++		tmpMatrix.x0 -= x * tmpMatrix.xx;
++	    }
++	    else if (back->imagePos == BgImagePosScaledProportionally)
++	    {
++		s1 = (float) s->width / back->width;
++		s2 = (float) s->height / back->height;
++		
++		s1 = MIN (s1, s2);
++
++		tmpMatrix.xx /= s1;
++		tmpMatrix.yy /= s1;
++		
++		x = (s->width - ((int)back->width * s1)) / 2.0;
++		tmpMatrix.x0 -= x * tmpMatrix.xx;
++		y = (s->height - ((int)back->height * s1)) / 2.0;
+ 		tmpMatrix.y0 -= y * tmpMatrix.yy;
++
++		reg = &tmpRegion;
++		
++		tmpRegion.extents.x1 = MAX (0, x);
++		tmpRegion.extents.y1 = MAX (0, y);
++		tmpRegion.extents.x2 = MIN (s->width, x + back->width * s1);
++		tmpRegion.extents.y2 = MIN (s->height, y + back->height * s1);
+ 	    }
+ 	    else if (back->imagePos == BgImagePosScaled)
+ 	    {
