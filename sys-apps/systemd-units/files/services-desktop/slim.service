@@ -1,0 +1,11 @@
+[Unit]
+Description=SLiM Simple Login Manager
+Conflicts=getty@tty1.service
+After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/slim -nodaemon
+
+[Install]
+Alias=display-manager.service

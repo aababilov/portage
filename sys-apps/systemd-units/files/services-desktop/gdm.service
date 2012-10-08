@@ -1,0 +1,12 @@
+[Unit]
+Description=Gnome Display Manager
+Conflicts=getty@tty1.service
+After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service
+
+[Service]
+ExecStart=/usr/bin/gdm -nodaemon
+ExecStop=/usr/sbin/gdm-stop
+Restart=always
+
+[Install]
+Alias=display-manager.service

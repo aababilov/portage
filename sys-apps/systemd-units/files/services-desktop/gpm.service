@@ -1,0 +1,14 @@
+[Unit]
+Description=gpm
+Requires=getty.target
+
+[Service]
+EnvironmentFile=/etc/conf.d/gpm
+# This use of EnvironmentFile requires $RESPONSIVENESS, 
+# $REPEAT_TYPE and $APPEND to be added to $params in the conf.d/gpm file.
+ExecStart=/usr/sbin/gpm -D -m $MOUSEDEV -t $MOUSE $params
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
