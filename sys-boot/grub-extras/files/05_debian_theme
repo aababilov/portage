@@ -125,6 +125,8 @@ d00d5e505ab63f2d53fa880bfac447e2d3bb197c  moreblue-orbit-grub.png
 f5b12c1009ec0a3b029185f6b66cd0d7e5611019  moreblue-orbit-grub.png
 EOF
 
+. /etc/default/grub
+
 # Include the configuration of desktop-base if available.
 if [ -f "/usr/share/desktop-base/grub_background.sh" ]; then
 	. "/usr/share/desktop-base/grub_background.sh"

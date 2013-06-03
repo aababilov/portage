@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="1"
+EAPI="5"
 
 inherit eutils
 
@@ -16,9 +16,13 @@ SLOT="0"
 DEPEND="sys-boot/os-prober
 	>=sys-boot/grub-2"
 
+S="${WORKDIR}"
+
 src_install() {
 	exeinto /etc/grub.d
 	doexe "${FILESDIR}"/05_debian_theme
-	exeinto /usr/libexec/linux-boot-probes/mounted
+	exeinto /usr/lib/linux-boot-probes/mounted
 	doexe "${FILESDIR}"/80linux
+	exeinto /usr/sbin
+	doexe "${FILESDIR}"/update-grub2
 }

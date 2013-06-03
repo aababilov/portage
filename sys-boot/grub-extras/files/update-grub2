@@ -1,0 +1,9 @@
+#!/bin/bash
+[ -d /boot/grub2 ] || mount /boot
+GRUB_CFG=/boot/grub2/grub.cfg
+[ ! -f $GRUB_CFG ] || mv $GRUB_CFG{,.bak}
+if LANG=C grub2-mkconfig -o $GRUB_CFG; then
+    rm -f ${GRUB_CFG}.bak
+else
+    mv $GRUB_CFG{.bak,}
+fi
