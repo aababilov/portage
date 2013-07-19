@@ -2,11 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 inherit distutils
 
-DESCRIPTION="Gnome Desktop Wallpapers Configuration Tool"
-HOMEPAGE="http://wallpapoz.akbarhome.com"
-SRC_URI="http://wallpapoz.akbarhome.com/files/${P}.tar.bz2"
+DESCRIPTION="Gnome and XFCE Desktop Wallpapers Configuration Tool"
+HOMEPAGE="http://vajrasky.wordpress.com/wallpapoz/"
+SRC_URI="mirror://github/vajrasky/wallpapoz/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
