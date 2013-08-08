@@ -1,0 +1,9 @@
+CoolReader 3 - free e-book (currently supported formats: fb2,epub,htm,rtf,txt) reader
+(c) Vadim Lopatin aka Baggins, 2000-2011
+
+LICENSE: All source codes (except thirdparty directory)
+are provided under the terms of GNU GPL license, version 2
+
+Source codes are available at sourceforge:
+git clone git://crengine.git.sourceforge.net/gitroot/crengine/crengine
+
